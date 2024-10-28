@@ -10,3 +10,5 @@
 14:39:11.030 id=24 [debug] handled request client -> server textDocument/documentSymbol in 1ms
 
 14:39:11.031 id=25 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+18:53:55.204 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 3ms
