@@ -2,7 +2,6 @@ defmodule Mix.Tasks.Exl.Gen.Migrations do
   use Mix.Task
 
   @repo Application.compile_env!(:ex_ledger, :repo)
-  @templates_dir "priv/templates/exl.gen.migrations"
   @migrations_dir "priv/repo/migrations"
 
   def run(_args) do
@@ -15,7 +14,9 @@ defmodule Mix.Tasks.Exl.Gen.Migrations do
     migration_name = "#{@migrations_dir}/#{timestamp()}_#{template_name}.exs"
 
     migration_content =
-      "#{@templates_dir}/#{template_name}.ex"
+      :ex_ledger
+      |> :code.priv_dir()
+      |> Path.join("templates/exl.gen.migrations/#{template_name}.ex")
       |> read_template!()
       |> EEx.eval_string(repo: @repo)
 
@@ -36,29 +37,4 @@ defmodule Mix.Tasks.Exl.Gen.Migrations do
 
   defp pad(i) when i < 10, do: <<?0, ?0 + i>>
   defp pad(i), do: to_string(i)
-
-  # defp host_app do
-  #   Mix.Project.config().app
-  # end
-
-  # Mix.Task.run("ecto.gen.migration", [migration_name])
-
-  # defp timestamp do
-  #   DateTime.utc_now()
-  #   |> DateTime.to_unix(:second)
-  #   |> Integer.to_string()
-  # end
-
-  # defp generate_migration_content(content) do
-  #   """
-  #   defmodule MyApp.Repo.Migrations.#{String.capitalize(content)} do
-  #     use Ecto.Migration
-
-  #     def change do
-  #       # Your migration content here
-  #       #{content}
-  #     end
-  #   end
-  #   """
-  # end
 end
