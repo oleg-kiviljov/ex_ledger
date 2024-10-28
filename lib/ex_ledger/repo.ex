@@ -5,7 +5,7 @@ defmodule ExLedger.Repo do
 
   @spec one(queryable :: Ecto.Queryable.t(), opts :: Keyword.t()) ::
           Ecto.Schema.t() | term() | nil
-  def one(queryable, opts) do
+  def one(queryable, opts \\ []) do
     @repo.one(queryable, opts)
   end
 
@@ -57,8 +57,4 @@ defmodule ExLedger.Repo do
   end
 
   defp prepend_key(key, {field, error}), do: {:"#{key}_#{field}", error}
-
-  # defp repo do
-  #   Application.fetch_env!(:ex_ledger, :repo)
-  # end
 end
