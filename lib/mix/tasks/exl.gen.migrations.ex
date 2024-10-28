@@ -21,7 +21,8 @@ defmodule Mix.Tasks.Exl.Gen.Migrations do
 
     File.mkdir_p!(@migrations_dir)
     File.write!(migration_name, migration_content)
-    Mix.shell().info("Migration file created: #{migration_name}")
+
+    Mix.shell().info(["\e[32m* creating\e[0m ", migration_name])
   end
 
   defp read_template!(template_path) do
