@@ -7,10 +7,12 @@ defmodule ExLedger.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [
-      # Starts a worker by calling: ExLedger.Worker.start_link(arg)
-      # {ExLedger.Worker, arg}
-    ]
+    children =
+      if Mix.env() == :test do
+        [ExLedger.TestRepo]
+      else
+        []
+      end
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

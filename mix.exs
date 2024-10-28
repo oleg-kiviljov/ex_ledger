@@ -7,7 +7,8 @@ defmodule ExLedger.MixProject do
       version: "0.1.0",
       elixir: "~> 1.17",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      elixirc_paths: elixirc_paths(Mix.env())
     ]
   end
 
@@ -19,13 +20,16 @@ defmodule ExLedger.MixProject do
     ]
   end
 
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
+
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
       {:ecto_enum, "~> 1.4"},
       {:ecto_sql, "~> 3.10"},
       {:polymorphic_embed, "~> 5.0"},
-      {:postgrex, ">= 0.0.0"},
+      {:postgrex, ">= 0.0.0", only: [:test]},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false}
     ]
   end
