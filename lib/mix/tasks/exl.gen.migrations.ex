@@ -17,6 +17,7 @@ defmodule Mix.Tasks.Exl.Gen.Migrations do
       :ex_ledger
       |> :code.priv_dir()
       |> Path.join("templates/exl.gen.migrations/#{template_name}.ex")
+      |> IO.inspect()
       |> read_template!()
       |> EEx.eval_string(repo: @repo)
 
