@@ -27,3 +27,6 @@ ex_ledger-*.tar
 
 # Language-server files
 /.elixir-tools/
+
+# Test migrations
+/priv/test_repo/
