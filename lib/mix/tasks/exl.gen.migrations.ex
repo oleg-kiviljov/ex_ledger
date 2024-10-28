@@ -2,7 +2,6 @@ defmodule Mix.Tasks.Exl.Gen.Migrations do
   use Mix.Task
 
   @repo Application.compile_env!(:ex_ledger, :repo)
-  @migrations_dir "priv/repo/migrations"
 
   def run(_args) do
     generate_migration("create_enums")
@@ -11,24 +10,19 @@ defmodule Mix.Tasks.Exl.Gen.Migrations do
   end
 
   defp generate_migration(template_name) do
-    migration_name = "#{@migrations_dir}/#{timestamp()}_#{template_name}.exs"
+    migration_name = "priv/repo/migrations/#{timestamp()}_#{template_name}.exs"
 
     migration_content =
       :ex_ledger
       |> :code.priv_dir()
       |> Path.join("templates/exl.gen.migrations/#{template_name}.ex")
-      |> IO.inspect()
-      |> read_template!()
+      |> File.read!()
       |> EEx.eval_string(repo: @repo)
 
     File.mkdir_p!(@migrations_dir)
     File.write!(migration_name, migration_content)
 
     Mix.shell().info(["\e[32m* creating\e[0m ", migration_name])
-  end
-
-  defp read_template!(template_path) do
-    File.exists?(template_path) && File.read!(template_path)
   end
 
   defp timestamp do
