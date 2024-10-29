@@ -510,14 +510,14 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{transaction_id: transaction_id}
 
       {:ok, _transaction} = ExLedger.confirm_deposit(params)
-      assert {:error, :invalid_transaction_status} = ExLedger.confirm_deposit(params)
+      assert {:error, :transaction_already_processed} = ExLedger.confirm_deposit(params)
     end
 
     test "fails if transaction has already failed", %{transaction_id: transaction_id} do
       params = %{transaction_id: transaction_id}
 
       {:ok, _transaction} = ExLedger.fail_deposit(params)
-      assert {:error, :invalid_transaction_status} = ExLedger.confirm_deposit(params)
+      assert {:error, :transaction_already_processed} = ExLedger.confirm_deposit(params)
     end
   end
 
@@ -556,14 +556,14 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{transaction_id: transaction_id}
 
       {:ok, _transaction} = ExLedger.confirm_deposit(params)
-      assert {:error, :invalid_transaction_status} = ExLedger.fail_deposit(params)
+      assert {:error, :transaction_already_processed} = ExLedger.fail_deposit(params)
     end
 
     test "fails if the transaction has already failed", %{transaction_id: transaction_id} do
       params = %{transaction_id: transaction_id}
 
       {:ok, _transaction} = ExLedger.fail_deposit(params)
-      assert {:error, :invalid_transaction_status} = ExLedger.fail_deposit(params)
+      assert {:error, :transaction_already_processed} = ExLedger.fail_deposit(params)
     end
   end
 
@@ -839,14 +839,14 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{transaction_id: transaction_id}
 
       {:ok, _transaction} = ExLedger.confirm_withdrawal(params)
-      assert {:error, :invalid_transaction_status} = ExLedger.confirm_withdrawal(params)
+      assert {:error, :transaction_already_processed} = ExLedger.confirm_withdrawal(params)
     end
 
     test "fails if transaction has already failed", %{transaction_id: transaction_id} do
       params = %{transaction_id: transaction_id}
 
       {:ok, _transaction} = ExLedger.fail_withdrawal(params)
-      assert {:error, :invalid_transaction_status} = ExLedger.confirm_withdrawal(params)
+      assert {:error, :transaction_already_processed} = ExLedger.confirm_withdrawal(params)
     end
   end
 
@@ -897,14 +897,14 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{transaction_id: transaction_id}
 
       {:ok, _transaction} = ExLedger.confirm_withdrawal(params)
-      assert {:error, :invalid_transaction_status} = ExLedger.fail_withdrawal(params)
+      assert {:error, :transaction_already_processed} = ExLedger.fail_withdrawal(params)
     end
 
     test "fails if the transaction has already failed", %{transaction_id: transaction_id} do
       params = %{transaction_id: transaction_id}
 
       {:ok, _transaction} = ExLedger.fail_withdrawal(params)
-      assert {:error, :invalid_transaction_status} = ExLedger.fail_withdrawal(params)
+      assert {:error, :transaction_already_processed} = ExLedger.fail_withdrawal(params)
     end
   end
 

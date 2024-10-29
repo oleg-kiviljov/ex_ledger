@@ -20,7 +20,7 @@ defmodule ExLedger.Transactions.FailWithdrawal do
 
   @spec execute(FailWithdrawal.params()) ::
           {:ok, Transaction.t()}
-          | {:error, :transaction_not_found | :invalid_transaction_status | Ecto.Changeset.t()}
+          | {:error, :transaction_not_found | :transaction_already_processed | Ecto.Changeset.t()}
   def execute(params) do
     Repo.transaction(fn ->
       with {:ok, transaction} <-

@@ -5,12 +5,12 @@ defmodule ExLedger.Transactions.ValidateTransactionStatus do
   alias ExLedger.Enums.TransactionStatus
 
   @spec execute(current_status :: TransactionStatus.t(), valid_status :: TransactionStatus.t()) ::
-          :ok | {:error, :invalid_transaction_status}
+          :ok | {:error, :transaction_already_processed}
   def execute(current_status, valid_status) do
     if current_status == valid_status do
       :ok
     else
-      {:error, :invalid_transaction_status}
+      {:error, :transaction_already_processed}
     end
   end
 end
