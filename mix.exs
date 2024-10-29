@@ -31,7 +31,7 @@ defmodule ExLedger.MixProject do
       {:polymorphic_embed, "~> 5.0"},
       {:postgrex, ">= 0.0.0", only: [:test]},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.4.1", only: [:test], runtime: false},
+      {:dialyxir, "~> 1.4.1", only: [:test], runtime: false}
     ]
   end
 end
