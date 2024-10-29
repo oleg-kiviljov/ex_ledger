@@ -30,3 +30,9 @@ ex_ledger-*.tar
 
 # Test migrations
 /priv/test_repo/
+
+# MacOS specific files
+*.DS_Store
+
+# Dialyzer plts
+/priv/plts

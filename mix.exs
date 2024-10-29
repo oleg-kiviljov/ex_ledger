@@ -8,7 +8,11 @@ defmodule ExLedger.MixProject do
       elixir: "~> 1.17",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      elixirc_paths: elixirc_paths(Mix.env())
+      elixirc_paths: elixirc_paths(Mix.env()),
+      dialyzer: [
+        plt_file: {:no_warn, "priv/plts/project.plt"},
+        plt_add_apps: [:mix, :ex_unit]
+      ]
     ]
   end
 
