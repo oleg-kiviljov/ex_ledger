@@ -1,17 +1,15 @@
 defmodule ExLedger.Repo do
-  @repo Application.compile_env!(:ex_ledger, :repo)
-
   alias Ecto.Changeset
 
   @spec one(queryable :: Ecto.Queryable.t(), opts :: Keyword.t()) ::
           Ecto.Schema.t() | term() | nil
   def one(queryable, opts \\ []) do
-    @repo.one(queryable, opts)
+    repo().one(queryable, opts)
   end
 
   @spec transaction(fun :: fun()) :: {:ok, any()} | {:error, atom()}
   def transaction(fun) do
-    @repo.transaction(fn repo ->
+    repo().transaction(fn repo ->
       Function.info(fun, :arity)
       |> case do
         {:arity, 0} -> fun.()
@@ -27,14 +25,14 @@ defmodule ExLedger.Repo do
   @spec insert(changeset :: Ecto.Changeset.t()) :: {:ok, any()} | {:error, Ecto.Changeset.t()}
   def insert(changeset) do
     changeset
-    |> @repo.insert()
+    |> repo().insert()
     |> handle_result()
   end
 
   @spec update(changeset :: Ecto.Changeset.t()) :: {:ok, any()} | {:error, Ecto.Changeset.t()}
   def update(changeset) do
     changeset
-    |> @repo.update()
+    |> repo().update()
     |> handle_result()
   end
 
@@ -57,4 +55,6 @@ defmodule ExLedger.Repo do
   end
 
   defp prepend_key(key, {field, error}), do: {:"#{key}_#{field}", error}
+
+  def repo, do: Application.fetch_env!(:ex_ledger, :repo)
 end
