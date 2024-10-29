@@ -30,7 +30,8 @@ defmodule ExLedger.MixProject do
       {:ecto_sql, "~> 3.10"},
       {:polymorphic_embed, "~> 5.0"},
       {:postgrex, ">= 0.0.0", only: [:test]},
-      {:credo, "~> 1.6", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.4.1", only: [:test], runtime: false},
     ]
   end
 end
