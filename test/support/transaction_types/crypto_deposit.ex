@@ -9,8 +9,8 @@ defmodule ExLedger.TransactionTypes.CryptoDeposit do
 
   @primary_key false
   embedded_schema do
-    field :from_address, :string
-    field :confirmations, :integer
+    field(:from_address, :string)
+    field(:confirmations, :integer)
   end
 
   def changeset(struct, attrs) do

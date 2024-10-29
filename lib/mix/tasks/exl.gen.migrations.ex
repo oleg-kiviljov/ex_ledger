@@ -30,7 +30,7 @@ defmodule Mix.Tasks.Exl.Gen.Migrations do
 
   defp to_snakecase(module_name) do
     module_name
-    |> Module.split()       
+    |> Module.split()
     |> List.last()
     |> Macro.underscore()
   end

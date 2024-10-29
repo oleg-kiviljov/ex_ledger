@@ -9,8 +9,8 @@ defmodule ExLedger.TransactionTypes.CryptoWithdrawal do
 
   @primary_key false
   embedded_schema do
-    field :to_address, :string
-    field :confirmations, :integer
+    field(:to_address, :string)
+    field(:confirmations, :integer)
   end
 
   def changeset(struct, attrs) do
