@@ -13,8 +13,8 @@ defmodule ExLedger.TransactionTypes.CryptoWithdrawal do
     field :confirmations, :integer
   end
 
-  def changeset(data, attrs) do
-    data
+  def changeset(struct, attrs) do
+    struct
     |> cast(attrs, @attrs)
     |> validate_required(@attrs)
   end

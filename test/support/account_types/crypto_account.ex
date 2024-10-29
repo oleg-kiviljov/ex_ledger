@@ -13,8 +13,8 @@ defmodule ExLedger.AccountTypes.CryptoAccount do
     field(:blockchain, :string)
   end
 
-  def changeset(properties, attrs) do
-    properties
+  def changeset(struct, attrs) do
+    struct
     |> cast(attrs, @attrs)
     |> validate_required(@attrs)
   end
