@@ -646,8 +646,7 @@ defmodule ExLedger.ExLedgerTest do
         account_id: 99_999
       }
 
-      assert {:error, changeset} = ExLedger.create_withdrawal(params)
-      assert "does not exist" in errors_on(changeset).account_id
+      assert {:error, :account_not_found} = ExLedger.create_withdrawal(params)
     end
 
     test "fails if account_id is nil" do
@@ -658,8 +657,7 @@ defmodule ExLedger.ExLedgerTest do
         account_id: nil
       }
 
-      assert {:error, changeset} = ExLedger.create_withdrawal(params)
-      assert "can't be blank" in errors_on(changeset).account_id
+      assert {:error, :account_not_found} = ExLedger.create_withdrawal(params)
     end
 
     test "fails if amount is nil", %{account_id: account_id} do
