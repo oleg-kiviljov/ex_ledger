@@ -19,7 +19,7 @@ config :ex_ledger,
 
 config :ex_ledger,
   repo: ExLedger.TestRepo,
-  supported_currencies: ~w(ETH BTC)a,
+  account_currencies: ~w(ETH BTC)a,
   account_statuses: ~w(enabled disabled)a,
   account_types: [crypto_account: ExLedger.AccountTypes.CryptoAccount],
   transaction_types: [

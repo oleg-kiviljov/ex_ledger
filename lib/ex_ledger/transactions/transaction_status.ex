@@ -1,4 +1,4 @@
-defmodule ExLedger.Enums.TransactionStatus do
+defmodule ExLedger.Transactions.TransactionStatus do
   @moduledoc """
   Transaction status enum.
   """

@@ -18,7 +18,7 @@ defmodule ExLedger.Transactions.ConfirmDeposit do
           optional(:properties) => map()
         }
 
-  @spec execute(ConfirmDeposit.params()) ::
+  @spec execute(params :: ConfirmDeposit.params()) ::
           {:ok, Transaction.t()}
           | {:error, :transaction_not_found | :transaction_already_processed | Ecto.Changeset.t()}
   def execute(params) do

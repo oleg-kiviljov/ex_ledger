@@ -1,4 +1,4 @@
-defmodule ExLedger.Enums.AccountStatus do
+defmodule ExLedger.Accounts.AccountStatus do
   @moduledoc """
   Account status enum.
   """

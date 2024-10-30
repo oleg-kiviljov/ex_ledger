@@ -10,7 +10,7 @@ defmodule ExLedger.Accounts.UpdateAccountProperties do
           required(:account_id) => non_neg_integer()
         }
 
-  @spec execute(UpdateAccountProperties.params()) ::
+  @spec execute(params :: UpdateAccountProperties.params()) ::
           {:ok, Account.t()} | {:error, :account_not_found | Ecto.Changeset.t()}
   def execute(params) do
     case FetchAccount.execute(params.account_id) do

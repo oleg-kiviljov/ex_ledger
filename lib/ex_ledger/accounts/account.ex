@@ -4,7 +4,7 @@ defmodule ExLedger.Accounts.Account do
   """
   use Ecto.Schema
 
-  alias ExLedger.Enums.{AccountStatus, AccountType, Currency}
+  alias ExLedger.Accounts.{AccountCurrency, AccountStatus, AccountType}
   alias ExLedger.Transactions.Transaction
   alias __MODULE__
 
@@ -19,7 +19,7 @@ defmodule ExLedger.Accounts.Account do
 
   @type t :: %Account{
           balance: Decimal.t(),
-          currency: Currency.t(),
+          currency: AccountCurrency.t(),
           type: AccountType.t(),
           status: AccountStatus.t(),
           properties: map() | nil,
@@ -29,7 +29,7 @@ defmodule ExLedger.Accounts.Account do
 
   schema "accounts" do
     field(:balance, :decimal, default: Decimal.new(0))
-    field(:currency, Currency)
+    field(:currency, AccountCurrency)
     field(:type, AccountType)
     field(:status, AccountStatus, default: @default_status)
 

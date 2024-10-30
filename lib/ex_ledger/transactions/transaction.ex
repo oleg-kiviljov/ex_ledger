@@ -5,14 +5,18 @@ defmodule ExLedger.Transactions.Transaction do
   use Ecto.Schema
 
   alias ExLedger.Accounts.Account
-  alias ExLedger.Enums.{TransactionStatus, TransactionType}
+  alias ExLedger.Transactions.{TransactionStatus, TransactionType}
   alias __MODULE__
 
   import Ecto.Changeset
   import PolymorphicEmbed
 
   @transaction_types Application.compile_env!(:ex_ledger, :transaction_types)
-  @deprecated_transaction_types Application.compile_env(:ex_ledger, :deprecated_transaction_types, [])
+  @deprecated_transaction_types Application.compile_env(
+                                  :ex_ledger,
+                                  :deprecated_transaction_types,
+                                  []
+                                )
   @default_status TransactionStatus.__enum_map__() |> List.first()
   @create_attrs ~w(amount type account_id)a
   @update_attrs ~w(status)a

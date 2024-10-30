@@ -17,7 +17,7 @@ defmodule ExLedger.Transactions.FailDeposit do
           optional(:properties) => map()
         }
 
-  @spec execute(FailDeposit.params()) ::
+  @spec execute(params :: FailDeposit.params()) ::
           {:ok, Transaction.t()}
           | {:error, :transaction_not_found | :transaction_already_processed | Ecto.Changeset.t()}
   def execute(params) do

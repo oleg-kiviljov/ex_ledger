@@ -1,4 +1,4 @@
-defmodule ExLedger.Enums.AccountType do
+defmodule ExLedger.Accounts.AccountType do
   @moduledoc """
   Account type enum.
   """
