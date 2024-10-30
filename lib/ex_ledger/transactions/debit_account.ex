@@ -2,26 +2,19 @@ defmodule ExLedger.Transactions.DebitAccount do
   @moduledoc """
   Subtracts the transaction amount from the account's balance.
   """
-
-  alias ExLedger.Accounts.{Account, LockAccount, UpdateAccount}
+  alias ExLedger.Accounts.{Account, UpdateAccount}
   alias ExLedger.Transactions.Transaction
 
-  require Logger
-
-  @spec execute(transaction :: Transaction.t()) ::
+  @spec execute(transaction :: Transaction.t(), account :: Account.t()) ::
           {:ok, Account.t()} | {:error, :insufficient_account_balance | :internal_error}
-  def execute(%Transaction{amount: transaction_amount, account_id: account_id}) do
-    case LockAccount.execute(account_id) do
-      {:ok, account} ->
-        Logger.info("[ExLedger] debiting #{transaction_amount} from Account (ID=#{account_id})")
-        debit_account(transaction_amount, account)
-
-      error ->
-        error
-    end
+  def execute(transaction, account) do
+    debit_account(transaction, account)
   end
 
-  defp debit_account(transaction_amount, %Account{balance: account_balance} = account) do
+  defp debit_account(
+         %Transaction{amount: transaction_amount},
+         %Account{balance: account_balance} = account
+       ) do
     account_balance
     |> Decimal.sub(transaction_amount)
     |> update_account_balance(account)

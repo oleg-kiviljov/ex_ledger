@@ -17,6 +17,9 @@ defmodule ExLedger.DataCase do
   use ExUnit.CaseTemplate
 
   alias Ecto.Adapters.SQL.Sandbox
+  alias ExLedger.Accounts.Account
+  alias ExLedger.TestRepo, as: Repo
+  alias ExLedger.Transactions.Transaction
 
   using do
     quote do
@@ -41,9 +44,27 @@ defmodule ExLedger.DataCase do
   @doc """
   Sets up the sandbox based on the test tags.
   """
+  def setup_sandbox(%{no_sandbox: true}) do
+    pid = Sandbox.start_owner!(Repo, sandbox: false)
+
+    on_exit(fn ->
+      :ok = Sandbox.checkout(Repo, sandbox: false)
+      Repo.delete_all(Transaction)
+      Repo.delete_all(Account)
+      Sandbox.stop_owner(pid)
+    end)
+  end
+
   def setup_sandbox(tags) do
-    pid = Sandbox.start_owner!(ExLedger.TestRepo, shared: not tags[:async])
+    pid = Sandbox.start_owner!(Repo, shared: not tags[:async])
     on_exit(fn -> Sandbox.stop_owner(pid) end)
+  end
+
+  @doc """
+  Automatically checks-out and checks-in connection for the function
+  """
+  def unboxed_run(fun) do
+    Sandbox.unboxed_run(Repo, fun)
   end
 
   @doc """
@@ -94,10 +115,10 @@ defmodule ExLedger.DataCase do
     account
   end
 
-  def create_deposit!(account) do
+  def create_deposit!(account, amount \\ Decimal.new(10)) do
     {:ok, transaction} =
       ExLedger.create_deposit(%{
-        amount: Decimal.new(10),
+        amount: amount,
         type: :crypto_deposit,
         properties: crypto_deposit_properties(),
         account_id: account.id
@@ -115,10 +136,10 @@ defmodule ExLedger.DataCase do
     transaction
   end
 
-  def create_withdrawal!(account) do
+  def create_withdrawal!(account, amount \\ Decimal.new(10)) do
     {:ok, transaction} =
       ExLedger.create_withdrawal(%{
-        amount: Decimal.new(10),
+        amount: amount,
         type: :crypto_withdrawal,
         properties: crypto_withdrawal_properties(),
         account_id: account.id

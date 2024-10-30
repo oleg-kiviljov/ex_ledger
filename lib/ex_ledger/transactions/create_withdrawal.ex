@@ -2,6 +2,7 @@ defmodule ExLedger.Transactions.CreateWithdrawal do
   @moduledoc """
   Creates a withdrawal transaction and debits the account.
   """
+  alias ExLedger.Accounts.LockAccount
   alias ExLedger.Repo
   alias ExLedger.Transactions.{CreateTransaction, DebitAccount, Transaction, TransactionType}
   alias __MODULE__
@@ -21,8 +22,9 @@ defmodule ExLedger.Transactions.CreateWithdrawal do
              | Ecto.Changeset.t()}
   def execute(params) do
     Repo.transaction(fn ->
-      with {:ok, transaction} <- CreateTransaction.execute(params),
-           {:ok, account} <- DebitAccount.execute(transaction) do
+      with {:ok, account} <- LockAccount.execute(params.account_id),
+           {:ok, transaction} <- CreateTransaction.execute(params),
+           {:ok, account} <- DebitAccount.execute(transaction, account) do
         {:ok, Map.replace!(transaction, :account, account)}
       end
     end)
