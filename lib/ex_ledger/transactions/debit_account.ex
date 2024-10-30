@@ -6,11 +6,14 @@ defmodule ExLedger.Transactions.DebitAccount do
   alias ExLedger.Accounts.{Account, LockAccount, UpdateAccount}
   alias ExLedger.Transactions.Transaction
 
+  require Logger
+
   @spec execute(transaction :: Transaction.t()) ::
           {:ok, Account.t()} | {:error, :insufficient_account_balance | :internal_error}
   def execute(%Transaction{amount: transaction_amount, account_id: account_id}) do
     case LockAccount.execute(account_id) do
       {:ok, account} ->
+        Logger.info("[ExLedger] debiting #{transaction_amount} from Account (ID=#{account_id})")
         debit_account(transaction_amount, account)
 
       error ->

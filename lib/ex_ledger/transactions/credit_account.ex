@@ -5,10 +5,13 @@ defmodule ExLedger.Transactions.CreditAccount do
   alias ExLedger.Accounts.{Account, LockAccount, UpdateAccount}
   alias ExLedger.Transactions.Transaction
 
+  require Logger
+
   @spec execute(transaction :: Transaction.t()) :: {:ok, Account.t()} | {:error, :internal_error}
   def execute(%Transaction{amount: transaction_amount, account_id: account_id}) do
     case LockAccount.execute(account_id) do
       {:ok, account} ->
+        Logger.info("[ExLedger] crediting #{transaction_amount} to Account (ID=#{account_id})")
         credit_account(transaction_amount, account)
 
       error ->
