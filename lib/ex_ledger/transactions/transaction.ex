@@ -5,14 +5,18 @@ defmodule ExLedger.Transactions.Transaction do
   use Ecto.Schema
 
   alias ExLedger.Accounts.Account
-  alias ExLedger.Enums.{TransactionStatus, TransactionType}
+  alias ExLedger.Transactions.{TransactionStatus, TransactionType}
   alias __MODULE__
 
   import Ecto.Changeset
   import PolymorphicEmbed
 
   @transaction_types Application.compile_env!(:ex_ledger, :transaction_types)
-  @deprecated_transaction_types Application.compile_env(:ex_ledger, :deprecated_transaction_types, [])
+  @deprecated_transaction_types Application.compile_env(
+                                  :ex_ledger,
+                                  :deprecated_transaction_types,
+                                  []
+                                )
   @default_status TransactionStatus.__enum_map__() |> List.first()
   @create_attrs ~w(amount type account_id)a
   @update_attrs ~w(status)a
@@ -46,7 +50,7 @@ defmodule ExLedger.Transactions.Transaction do
     timestamps(type: :utc_datetime)
   end
 
-  def create_changeset(params), do: create_changeset(%__MODULE__{}, params)
+  def create_changeset(params), do: create_changeset(%Transaction{}, params)
 
   def create_changeset(transaction, attrs) do
     transaction

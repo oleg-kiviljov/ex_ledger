@@ -10,7 +10,7 @@ defmodule ExLedger.Transactions.UpdateTransactionProperties do
           required(:transaction_id) => non_neg_integer()
         }
 
-  @spec execute(UpdateTransactionProperties.params()) ::
+  @spec execute(params :: UpdateTransactionProperties.params()) ::
           {:ok, Transaction.t()} | {:error, :transaction_not_found | Ecto.Changeset.t()}
   def execute(params) do
     case FetchTransaction.execute(params.transaction_id) do

@@ -1,4 +1,7 @@
 defmodule Mix.Tasks.Exl.Gen.Migration do
+  @moduledoc """
+  Generates migration for accounts and transactions tables.
+  """
   use Mix.Task
 
   @repo Application.compile_env!(:ex_ledger, :repo)

@@ -2,8 +2,7 @@ defmodule ExLedger.Transactions.CreateDeposit do
   @moduledoc """
   Creates a deposit transaction.
   """
-  alias ExLedger.Enums.TransactionType
-  alias ExLedger.Transactions.{CreateTransaction, Transaction}
+  alias ExLedger.Transactions.{CreateTransaction, Transaction, TransactionType}
   alias __MODULE__
 
   @type params :: %{
@@ -13,7 +12,8 @@ defmodule ExLedger.Transactions.CreateDeposit do
           required(:account_id) => non_neg_integer()
         }
 
-  @spec execute(CreateDeposit.params()) :: {:ok, Transaction.t()} | {:error, Ecto.Changeset.t()}
+  @spec execute(params :: CreateDeposit.params()) ::
+          {:ok, Transaction.t()} | {:error, Ecto.Changeset.t()}
   def execute(params) do
     CreateTransaction.execute(params)
   end

@@ -2,9 +2,8 @@ defmodule ExLedger.Transactions.CreateWithdrawal do
   @moduledoc """
   Creates a withdrawal transaction and debits the account.
   """
-  alias ExLedger.Enums.TransactionType
   alias ExLedger.Repo
-  alias ExLedger.Transactions.{CreateTransaction, DebitAccount, Transaction}
+  alias ExLedger.Transactions.{CreateTransaction, DebitAccount, Transaction, TransactionType}
   alias __MODULE__
 
   @type params :: %{
@@ -14,7 +13,7 @@ defmodule ExLedger.Transactions.CreateWithdrawal do
           required(:account_id) => non_neg_integer()
         }
 
-  @spec execute(CreateWithdrawal.params()) ::
+  @spec execute(params :: CreateWithdrawal.params()) ::
           {:ok, Transaction.t()}
           | {:error,
              :insufficient_account_balance

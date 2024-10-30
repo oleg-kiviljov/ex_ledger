@@ -2,8 +2,7 @@ defmodule ExLedger.Accounts.UpdateAccountStatus do
   @moduledoc """
   Updates the account's status.
   """
-  alias ExLedger.Accounts.{Account, FetchAccount, UpdateAccount}
-  alias ExLedger.Enums.AccountStatus
+  alias ExLedger.Accounts.{Account, AccountStatus, FetchAccount, UpdateAccount}
   alias __MODULE__
 
   @type params :: %{
@@ -11,7 +10,7 @@ defmodule ExLedger.Accounts.UpdateAccountStatus do
           required(:account_id) => non_neg_integer()
         }
 
-  @spec execute(UpdateAccountStatus.params()) ::
+  @spec execute(params :: UpdateAccountStatus.params()) ::
           {:ok, Account.t()} | {:error, :account_not_found | Ecto.Changeset.t()}
   def execute(params) do
     case FetchAccount.execute(params.account_id) do
