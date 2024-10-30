@@ -20,7 +20,11 @@ defmodule ExLedger.DataCase do
 
   using do
     quote do
+      alias ExLedger.Accounts.Account
+      alias ExLedger.AccountTypes.CryptoAccount
       alias ExLedger.TestRepo, as: Repo
+      alias ExLedger.Transactions.Transaction
+      alias ExLedger.TransactionTypes.{CryptoDeposit, CryptoWithdrawal}
 
       import Ecto
       import Ecto.Changeset
@@ -56,5 +60,70 @@ defmodule ExLedger.DataCase do
         opts |> Keyword.get(String.to_existing_atom(key), key) |> to_string()
       end)
     end)
+  end
+
+  def crypto_account_properties do
+    %{
+      address: "0xb794f5ea0ba39494ce839613fffba74279579268",
+      blockchain: "ETHEREUM"
+    }
+  end
+
+  def crypto_deposit_properties do
+    %{
+      from_address: "0x1234556789",
+      confirmations: 0
+    }
+  end
+
+  def crypto_withdrawal_properties do
+    %{
+      to_address: "0x987654321",
+      confirmations: 0
+    }
+  end
+
+  def create_account! do
+    {:ok, account} =
+      ExLedger.create_account(%{
+        currency: :ETH,
+        type: :crypto_account,
+        properties: crypto_account_properties()
+      })
+
+    account
+  end
+
+  def create_deposit!(account) do
+    {:ok, transaction} =
+      ExLedger.create_deposit(%{
+        amount: Decimal.new(10),
+        type: :crypto_deposit,
+        properties: crypto_deposit_properties(),
+        account_id: account.id
+      })
+
+    transaction
+  end
+
+  def confirm_deposit!(transaction) do
+    {:ok, transaction} =
+      ExLedger.confirm_deposit(%{
+        transaction_id: transaction.id
+      })
+
+    transaction
+  end
+
+  def create_withdrawal!(account) do
+    {:ok, transaction} =
+      ExLedger.create_withdrawal(%{
+        amount: Decimal.new(10),
+        type: :crypto_withdrawal,
+        properties: crypto_withdrawal_properties(),
+        account_id: account.id
+      })
+
+    transaction
   end
 end
