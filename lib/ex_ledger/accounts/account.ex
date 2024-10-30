@@ -12,6 +12,7 @@ defmodule ExLedger.Accounts.Account do
   import PolymorphicEmbed
 
   @account_types Application.compile_env!(:ex_ledger, :account_types)
+  @deprecated_account_types Application.compile_env(:ex_ledger, :deprecated_account_types, [])
   @default_status AccountStatus.__enum_map__() |> List.first()
   @create_attrs ~w(currency type)a
   @update_attrs ~w(balance status)a
@@ -34,6 +35,7 @@ defmodule ExLedger.Accounts.Account do
 
     polymorphic_embeds_one(:properties,
       types: @account_types,
+      retain_unlisted_types_on_load: @deprecated_account_types,
       use_parent_field_for_type: :type,
       type_field_name: :type,
       on_type_not_found: :changeset_error,

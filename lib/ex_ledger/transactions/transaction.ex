@@ -12,6 +12,7 @@ defmodule ExLedger.Transactions.Transaction do
   import PolymorphicEmbed
 
   @transaction_types Application.compile_env!(:ex_ledger, :transaction_types)
+  @deprecated_transaction_types Application.compile_env(:ex_ledger, :deprecated_transaction_types, [])
   @default_status TransactionStatus.__enum_map__() |> List.first()
   @create_attrs ~w(amount type account_id)a
   @update_attrs ~w(status)a
@@ -33,6 +34,7 @@ defmodule ExLedger.Transactions.Transaction do
 
     polymorphic_embeds_one(:properties,
       types: @transaction_types,
+      retain_unlisted_types_on_load: @deprecated_transaction_types,
       use_parent_field_for_type: :type,
       type_field_name: :type,
       on_type_not_found: :changeset_error,
