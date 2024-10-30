@@ -166,7 +166,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
     end
 
     test "fails if the account does not exist" do
-      params = %{status: :disabled, account_id: 99999}
+      params = %{status: :disabled, account_id: 99_999}
 
       assert {:error, :account_not_found} = ExLedger.update_account_status(params)
     end
@@ -215,7 +215,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
     end
 
     test "fails if the account does not exist" do
-      params = %{properties: %{address: "new address"}, account_id: 99999}
+      params = %{properties: %{address: "new address"}, account_id: 99_999}
 
       assert {:error, :account_not_found} = ExLedger.update_account_properties(params)
     end
@@ -318,7 +318,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
         amount: Decimal.new(10),
         type: :crypto_deposit,
         properties: @crypto_deposit_properties,
-        account_id: 99999
+        account_id: 99_999
       }
 
       assert {:error, changeset} = ExLedger.create_deposit(params)
@@ -501,7 +501,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
     end
 
     test "fails if transaction does not exist", %{transaction_id: _transaction_id} do
-      params = %{transaction_id: 99999}
+      params = %{transaction_id: 99_999}
 
       assert {:error, :transaction_not_found} = ExLedger.confirm_deposit(params)
     end
@@ -661,7 +661,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
         amount: Decimal.new(10),
         type: :crypto_withdrawal,
         properties: @crypto_withdrawal_properties,
-        account_id: 99999
+        account_id: 99_999
       }
 
       assert {:error, changeset} = ExLedger.create_withdrawal(params)
@@ -824,7 +824,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
     end
 
     test "fails if the transaction does not exist", %{transaction_id: _transaction_id} do
-      params = %{transaction_id: 99999}
+      params = %{transaction_id: 99_999}
 
       assert {:error, :transaction_not_found} = ExLedger.confirm_withdrawal(params)
     end
@@ -935,7 +935,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
     end
 
     test "fails if the transaction does not exist" do
-      params = %{properties: %{confirmations: 5}, transaction_id: 99999}
+      params = %{properties: %{confirmations: 5}, transaction_id: 99_999}
 
       assert {:error, :transaction_not_found} = ExLedger.update_transaction_properties(params)
     end
