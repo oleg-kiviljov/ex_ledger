@@ -1,23 +1,5 @@
-defmodule ExLedger.Accounts.ExLedgerTest do
+defmodule ExLedger.ExLedgerTest do
   use ExLedger.DataCase
-
-  alias ExLedger.Accounts.Account
-  alias ExLedger.AccountTypes.CryptoAccount
-  alias ExLedger.Transactions.Transaction
-  alias ExLedger.TransactionTypes.{CryptoDeposit, CryptoWithdrawal}
-
-  @crypto_account_properties %{
-    address: "0xb794f5ea0ba39494ce839613fffba74279579268",
-    blockchain: "ETHEREUM"
-  }
-  @crypto_deposit_properties %{
-    from_address: "0x1234556789",
-    confirmations: 0
-  }
-  @crypto_withdrawal_properties %{
-    to_address: "0x987654321",
-    confirmations: 0
-  }
 
   describe "create_account/1" do
     test "creates an account" do
@@ -25,10 +7,10 @@ defmodule ExLedger.Accounts.ExLedgerTest do
         params = %{
           currency: :ETH,
           type: :crypto_account,
-          properties: @crypto_account_properties
+          properties: crypto_account_properties()
         }
 
-      properties = struct(CryptoAccount, @crypto_account_properties)
+      properties = struct(CryptoAccount, crypto_account_properties())
 
       assert {:ok, %Account{id: account_id}} = ExLedger.create_account(params)
 
@@ -70,7 +52,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         currency: nil,
         type: :crypto_account,
-        properties: @crypto_account_properties
+        properties: crypto_account_properties()
       }
 
       assert {:error, changeset} = ExLedger.create_account(params)
@@ -81,7 +63,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         currency: :invalid_currency,
         type: :crypto_account,
-        properties: @crypto_account_properties
+        properties: crypto_account_properties()
       }
 
       assert {:error, changeset} = ExLedger.create_account(params)
@@ -92,7 +74,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         currency: :ETH,
         type: nil,
-        properties: @crypto_account_properties
+        properties: crypto_account_properties()
       }
 
       assert {:error, changeset} = ExLedger.create_account(params)
@@ -103,7 +85,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         currency: :ETH,
         type: :invalid_type,
-        properties: @crypto_account_properties
+        properties: crypto_account_properties()
       }
 
       assert {:error, changeset} = ExLedger.create_account(params)
@@ -125,7 +107,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         currency: :ETH,
         type: :crypto_account,
-        properties: Map.replace!(@crypto_account_properties, :address, nil)
+        properties: Map.replace!(crypto_account_properties(), :address, nil)
       }
 
       assert {:error, changeset} = ExLedger.create_account(params)
@@ -136,7 +118,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         currency: :ETH,
         type: :crypto_account,
-        properties: Map.replace!(@crypto_account_properties, :address, 123)
+        properties: Map.replace!(crypto_account_properties(), :address, 123)
       }
 
       assert {:error, changeset} = ExLedger.create_account(params)
@@ -260,7 +242,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
         params = %{
           amount: Decimal.new(10),
           type: :crypto_deposit,
-          properties: @crypto_deposit_properties,
+          properties: crypto_deposit_properties(),
           account_id: account_id
         }
 
@@ -317,7 +299,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         amount: Decimal.new(10),
         type: :crypto_deposit,
-        properties: @crypto_deposit_properties,
+        properties: crypto_deposit_properties(),
         account_id: 99_999
       }
 
@@ -329,7 +311,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         amount: Decimal.new(10),
         type: :crypto_deposit,
-        properties: @crypto_deposit_properties,
+        properties: crypto_deposit_properties(),
         account_id: nil
       }
 
@@ -341,7 +323,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         amount: nil,
         type: :crypto_deposit,
-        properties: @crypto_deposit_properties,
+        properties: crypto_deposit_properties(),
         account_id: account_id
       }
 
@@ -353,7 +335,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         amount: "invalid_amount",
         type: :crypto_deposit,
-        properties: @crypto_deposit_properties,
+        properties: crypto_deposit_properties(),
         account_id: account_id
       }
 
@@ -365,7 +347,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         amount: Decimal.new(-10),
         type: :crypto_deposit,
-        properties: @crypto_deposit_properties,
+        properties: crypto_deposit_properties(),
         account_id: account_id
       }
 
@@ -377,7 +359,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         amount: Decimal.new(0),
         type: :crypto_deposit,
-        properties: @crypto_deposit_properties,
+        properties: crypto_deposit_properties(),
         account_id: account_id
       }
 
@@ -389,7 +371,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         amount: Decimal.new(10),
         type: nil,
-        properties: @crypto_deposit_properties,
+        properties: crypto_deposit_properties(),
         account_id: account_id
       }
 
@@ -401,7 +383,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         amount: Decimal.new(10),
         type: :invalid_type,
-        properties: @crypto_deposit_properties,
+        properties: crypto_deposit_properties(),
         account_id: account_id
       }
 
@@ -425,7 +407,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         amount: Decimal.new(10),
         type: :crypto_deposit,
-        properties: Map.replace!(@crypto_deposit_properties, :from_address, nil),
+        properties: Map.replace!(crypto_deposit_properties(), :from_address, nil),
         account_id: account_id
       }
 
@@ -437,7 +419,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         amount: Decimal.new(10),
         type: :crypto_deposit,
-        properties: Map.replace!(@crypto_deposit_properties, :from_address, 123),
+        properties: Map.replace!(crypto_deposit_properties(), :from_address, 123),
         account_id: account_id
       }
 
@@ -585,7 +567,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
         params = %{
           amount: Decimal.new(10),
           type: :crypto_withdrawal,
-          properties: @crypto_withdrawal_properties,
+          properties: crypto_withdrawal_properties(),
           account_id: account_id
         }
 
@@ -648,7 +630,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         amount: Decimal.new(10),
         type: :crypto_withdrawal,
-        properties: @crypto_withdrawal_properties,
+        properties: crypto_withdrawal_properties(),
         account_id: account_id
       }
 
@@ -660,31 +642,29 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         amount: Decimal.new(10),
         type: :crypto_withdrawal,
-        properties: @crypto_withdrawal_properties,
+        properties: crypto_withdrawal_properties(),
         account_id: 99_999
       }
 
-      assert {:error, changeset} = ExLedger.create_withdrawal(params)
-      assert "does not exist" in errors_on(changeset).account_id
+      assert {:error, :account_not_found} = ExLedger.create_withdrawal(params)
     end
 
     test "fails if account_id is nil" do
       params = %{
         amount: Decimal.new(10),
         type: :crypto_withdrawal,
-        properties: @crypto_withdrawal_properties,
+        properties: crypto_withdrawal_properties(),
         account_id: nil
       }
 
-      assert {:error, changeset} = ExLedger.create_withdrawal(params)
-      assert "can't be blank" in errors_on(changeset).account_id
+      assert {:error, :account_not_found} = ExLedger.create_withdrawal(params)
     end
 
     test "fails if amount is nil", %{account_id: account_id} do
       params = %{
         amount: nil,
         type: :crypto_withdrawal,
-        properties: @crypto_withdrawal_properties,
+        properties: crypto_withdrawal_properties(),
         account_id: account_id
       }
 
@@ -696,7 +676,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         amount: "invalid_amount",
         type: :crypto_withdrawal,
-        properties: @crypto_withdrawal_properties,
+        properties: crypto_withdrawal_properties(),
         account_id: account_id
       }
 
@@ -708,7 +688,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         amount: Decimal.new(-10),
         type: :crypto_withdrawal,
-        properties: @crypto_withdrawal_properties,
+        properties: crypto_withdrawal_properties(),
         account_id: account_id
       }
 
@@ -720,7 +700,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         amount: Decimal.new(0),
         type: :crypto_withdrawal,
-        properties: @crypto_withdrawal_properties,
+        properties: crypto_withdrawal_properties(),
         account_id: account_id
       }
 
@@ -732,7 +712,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         amount: Decimal.new(10),
         type: nil,
-        properties: @crypto_withdrawal_properties,
+        properties: crypto_withdrawal_properties(),
         account_id: account_id
       }
 
@@ -744,7 +724,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         amount: Decimal.new(10),
         type: :invalid_type,
-        properties: @crypto_withdrawal_properties,
+        properties: crypto_withdrawal_properties(),
         account_id: account_id
       }
 
@@ -768,7 +748,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         amount: Decimal.new(10),
         type: :crypto_withdrawal,
-        properties: Map.replace!(@crypto_withdrawal_properties, :to_address, nil),
+        properties: Map.replace!(crypto_withdrawal_properties(), :to_address, nil),
         account_id: account_id
       }
 
@@ -780,7 +760,7 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       params = %{
         amount: Decimal.new(10),
         type: :crypto_withdrawal,
-        properties: Map.replace!(@crypto_withdrawal_properties, :to_address, 123),
+        properties: Map.replace!(crypto_withdrawal_properties(), :to_address, 123),
         account_id: account_id
       }
 
@@ -966,49 +946,5 @@ defmodule ExLedger.Accounts.ExLedgerTest do
       assert {:error, changeset} = ExLedger.update_transaction_properties(params)
       assert "is invalid" in errors_on(changeset).properties_confirmations
     end
-  end
-
-  defp create_account! do
-    {:ok, account} =
-      ExLedger.create_account(%{
-        currency: :ETH,
-        type: :crypto_account,
-        properties: @crypto_account_properties
-      })
-
-    account
-  end
-
-  defp create_deposit!(account) do
-    {:ok, transaction} =
-      ExLedger.create_deposit(%{
-        amount: Decimal.new(10),
-        type: :crypto_deposit,
-        properties: @crypto_deposit_properties,
-        account_id: account.id
-      })
-
-    transaction
-  end
-
-  defp confirm_deposit!(transaction) do
-    {:ok, transaction} =
-      ExLedger.confirm_deposit(%{
-        transaction_id: transaction.id
-      })
-
-    transaction
-  end
-
-  defp create_withdrawal!(account) do
-    {:ok, transaction} =
-      ExLedger.create_withdrawal(%{
-        amount: Decimal.new(10),
-        type: :crypto_withdrawal,
-        properties: @crypto_withdrawal_properties,
-        account_id: account.id
-      })
-
-    transaction
   end
 end

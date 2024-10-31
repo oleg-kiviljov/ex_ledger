@@ -7,6 +7,9 @@ defmodule ExLedger.Accounts.LockAccount do
 
   @spec execute(account_id :: non_neg_integer()) ::
           {:ok, Account.t()} | {:error, :account_not_found}
+
+  def execute(nil), do: {:error, :account_not_found}
+
   def execute(account_id) do
     account_id
     |> AccountQuery.with_lock()

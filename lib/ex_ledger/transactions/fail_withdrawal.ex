@@ -2,6 +2,8 @@ defmodule ExLedger.Transactions.FailWithdrawal do
   @moduledoc """
   Marks the withdrawal transaction as failed and credits the account.
   """
+  alias ExLedger.Accounts.LockAccount
+
   alias ExLedger.Transactions.{
     CreditAccount,
     LockTransaction,
@@ -25,8 +27,9 @@ defmodule ExLedger.Transactions.FailWithdrawal do
     Repo.transaction(fn ->
       with {:ok, transaction} <-
              LockTransaction.execute(params.transaction_id),
+           {:ok, account} <- LockAccount.execute(transaction.account_id),
            :ok <- ValidateTransactionStatus.execute(transaction.status, :created),
-           {:ok, account} <- CreditAccount.execute(transaction),
+           {:ok, account} <- CreditAccount.execute(transaction, account),
            {:ok, failed_transaction} <-
              UpdateTransaction.execute(
                %{status: :failed, properties: Map.get(params, :properties, %{})},

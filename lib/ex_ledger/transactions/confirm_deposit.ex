@@ -2,6 +2,9 @@ defmodule ExLedger.Transactions.ConfirmDeposit do
   @moduledoc """
   Confirms the deposit transaction and credits the account.
   """
+  alias ExLedger.Accounts.LockAccount
+  alias ExLedger.Repo
+
   alias ExLedger.Transactions.{
     CreditAccount,
     LockTransaction,
@@ -10,7 +13,6 @@ defmodule ExLedger.Transactions.ConfirmDeposit do
     ValidateTransactionStatus
   }
 
-  alias ExLedger.Repo
   alias __MODULE__
 
   @type params :: %{
@@ -25,8 +27,9 @@ defmodule ExLedger.Transactions.ConfirmDeposit do
     Repo.transaction(fn ->
       with {:ok, transaction} <-
              LockTransaction.execute(params.transaction_id),
+           {:ok, account} <- LockAccount.execute(transaction.account_id),
            :ok <- ValidateTransactionStatus.execute(transaction.status, :created),
-           {:ok, account} <- CreditAccount.execute(transaction),
+           {:ok, account} <- CreditAccount.execute(transaction, account),
            {:ok, confirmed_transaction} <-
              UpdateTransaction.execute(
                %{status: :confirmed, properties: Map.get(params, :properties, %{})},

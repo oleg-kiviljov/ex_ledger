@@ -6,8 +6,8 @@ defmodule ExLedger.Transactions.UpdateTransactionProperties do
   alias __MODULE__
 
   @type params :: %{
-          required(:properties) => map(),
-          required(:transaction_id) => non_neg_integer()
+          required(:transaction_id) => non_neg_integer(),
+          required(:properties) => map()
         }
 
   @spec execute(params :: UpdateTransactionProperties.params()) ::
