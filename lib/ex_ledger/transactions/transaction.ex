@@ -50,7 +50,7 @@ defmodule ExLedger.Transactions.Transaction do
     timestamps(type: :utc_datetime)
   end
 
-  def create_changeset(params), do: create_changeset(%Transaction{}, params)
+  def create_changeset(attrs), do: create_changeset(%Transaction{}, attrs)
 
   def create_changeset(transaction, attrs) do
     transaction

@@ -47,7 +47,7 @@ defmodule ExLedger.Accounts.Account do
     timestamps(type: :utc_datetime)
   end
 
-  def create_changeset(params), do: create_changeset(%Account{}, params)
+  def create_changeset(attrs), do: create_changeset(%Account{}, attrs)
 
   def create_changeset(account, attrs) do
     account
