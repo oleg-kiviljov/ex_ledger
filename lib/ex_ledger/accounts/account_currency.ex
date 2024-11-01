@@ -4,6 +4,6 @@ defmodule ExLedger.Accounts.AccountCurrency do
   """
 
   use EctoEnum,
-    type: :currency,
+    type: :account_currency,
     enums: Application.compile_env!(:ex_ledger, :account_currencies)
 end
