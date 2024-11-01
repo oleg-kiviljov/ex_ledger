@@ -9,10 +9,12 @@ defmodule ExLedger.Accounts.Account do
   alias __MODULE__
 
   import Ecto.Changeset
+  import ExLedger.Macros
   import PolymorphicEmbed
 
   @account_types Application.compile_env!(:ex_ledger, :account_types)
   @deprecated_account_types Application.compile_env(:ex_ledger, :deprecated_account_types, [])
+  @account_belongs_to Application.compile_env(:ex_ledger, :account_belongs_to)
   @default_status AccountStatus.__enum_map__() |> List.first()
   @create_attrs ~w(currency type)a
   @update_attrs ~w(balance status)a
@@ -43,6 +45,8 @@ defmodule ExLedger.Accounts.Account do
     )
 
     has_many(:transactions, Transaction)
+
+    maybe_belongs_to(@account_belongs_to)
 
     timestamps(type: :utc_datetime)
   end
