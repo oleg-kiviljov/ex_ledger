@@ -54,16 +54,31 @@ defmodule ExLedger.Accounts.Account do
   def create_changeset(attrs), do: create_changeset(%Account{}, attrs)
 
   def create_changeset(account, attrs) do
+    create_attrs = create_attrs(@create_attrs, @account_belongs_to)
+
     account
-    |> cast(attrs, @create_attrs)
-    |> cast_polymorphic_embed(:properties, required: true)
-    |> validate_required(@create_attrs)
+    |> cast(attrs, create_attrs)
+    |> cast_polymorphic_embed(:properties)
+    |> validate_required(create_attrs)
+  end
+
+  defp create_attrs(create_attrs, account_belongs_to) do
+    if account_belongs_to do
+      create_attrs ++
+        [
+          account_belongs_to
+          |> Keyword.fetch!(:opts)
+          |> Keyword.fetch!(:foreign_key)
+        ]
+    else
+      create_attrs
+    end
   end
 
   def update_changeset(account, attrs) do
     account
     |> cast(attrs, @update_attrs)
-    |> cast_polymorphic_embed(:properties, required: true)
+    |> cast_polymorphic_embed(:properties)
     |> validate_required(@update_attrs)
     |> validate_balance()
   end

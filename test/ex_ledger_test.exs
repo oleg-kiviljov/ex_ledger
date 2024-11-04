@@ -30,8 +30,7 @@ defmodule ExLedger.ExLedgerTest do
       %{currency: currency, type: type} =
         params = %{
           currency: :ETH,
-          type: :crypto_account,
-          properties: %{}
+          type: :crypto_account
         }
 
       assert {:ok, %Account{id: account_id}} = ExLedger.create_account(params)
@@ -90,17 +89,6 @@ defmodule ExLedger.ExLedgerTest do
 
       assert {:error, changeset} = ExLedger.create_account(params)
       assert "is invalid" in errors_on(changeset).type
-    end
-
-    test "fails if properties are nil" do
-      params = %{
-        currency: :ETH,
-        type: :crypto_account,
-        properties: nil
-      }
-
-      assert {:error, changeset} = ExLedger.create_account(params)
-      assert "can't be blank" in errors_on(changeset).properties
     end
 
     test "fails if property is nil" do
@@ -179,7 +167,7 @@ defmodule ExLedger.ExLedgerTest do
       %{account_id: create_account!().id}
     end
 
-    test "updates the account's properties", %{account_id: account_id} do
+    test "partially updates the account's properties", %{account_id: account_id} do
       %{properties: %{address: address}} =
         params = %{
           properties: %{address: "new address"},
@@ -196,6 +184,22 @@ defmodule ExLedger.ExLedgerTest do
                Repo.get(Account, account_id)
     end
 
+    test "updates the account's properties to nil", %{account_id: account_id} do
+      params = %{
+        properties: nil,
+        account_id: account_id
+      }
+
+      assert {:ok,
+              %Account{
+                id: ^account_id
+              }} =
+               ExLedger.update_account_properties(params)
+
+      assert %Account{properties: nil} =
+               Repo.get(Account, account_id)
+    end
+
     test "fails if the account does not exist" do
       params = %{properties: %{address: "new address"}, account_id: 99_999}
 
@@ -206,13 +210,6 @@ defmodule ExLedger.ExLedgerTest do
       params = %{properties: %{address: "new address"}, account_id: nil}
 
       assert {:error, :account_not_found} = ExLedger.update_account_properties(params)
-    end
-
-    test "fails if properties are nil", %{account_id: account_id} do
-      params = %{properties: nil, account_id: account_id}
-
-      assert {:error, changeset} = ExLedger.update_account_properties(params)
-      assert "can't be blank" in errors_on(changeset).properties
     end
 
     test "fails if property is nil", %{account_id: account_id} do
@@ -273,7 +270,6 @@ defmodule ExLedger.ExLedgerTest do
         params = %{
           amount: Decimal.new(10),
           type: :crypto_deposit,
-          properties: %{},
           account_id: account_id
         }
 
@@ -391,18 +387,6 @@ defmodule ExLedger.ExLedgerTest do
       assert "is invalid" in errors_on(changeset).type
     end
 
-    test "fails if properties are nil", %{account_id: account_id} do
-      params = %{
-        amount: Decimal.new(10),
-        type: :crypto_deposit,
-        properties: nil,
-        account_id: account_id
-      }
-
-      assert {:error, changeset} = ExLedger.create_deposit(params)
-      assert "can't be blank" in errors_on(changeset).properties
-    end
-
     test "fails if property is nil", %{account_id: account_id} do
       params = %{
         amount: Decimal.new(10),
@@ -470,6 +454,28 @@ defmodule ExLedger.ExLedgerTest do
       assert %Transaction{
                status: :confirmed,
                properties: %CryptoDeposit{confirmations: ^confirmations}
+             } = Repo.get(Transaction, transaction_id)
+
+      assert %Account{balance: account_balance} = Repo.get(Account, account_id)
+      assert Decimal.eq?(account_balance, transaction_amount)
+    end
+
+    test "confirms the deposit transaction and updates it's properties to nil", %{
+      transaction_id: transaction_id
+    } do
+      params = %{transaction_id: transaction_id, properties: nil}
+
+      assert {:ok,
+              %Transaction{
+                id: ^transaction_id,
+                amount: transaction_amount,
+                account_id: account_id
+              }} =
+               ExLedger.confirm_deposit(params)
+
+      assert %Transaction{
+               status: :confirmed,
+               properties: nil
              } = Repo.get(Transaction, transaction_id)
 
       assert %Account{balance: account_balance} = Repo.get(Account, account_id)
@@ -601,7 +607,6 @@ defmodule ExLedger.ExLedgerTest do
         params = %{
           amount: Decimal.new(10),
           type: :crypto_withdrawal,
-          properties: %{},
           account_id: account_id
         }
 
@@ -732,18 +737,6 @@ defmodule ExLedger.ExLedgerTest do
       assert "is invalid" in errors_on(changeset).type
     end
 
-    test "fails if properties are nil", %{account_id: account_id} do
-      params = %{
-        amount: Decimal.new(10),
-        type: :crypto_withdrawal,
-        properties: nil,
-        account_id: account_id
-      }
-
-      assert {:error, changeset} = ExLedger.create_withdrawal(params)
-      assert "can't be blank" in errors_on(changeset).properties
-    end
-
     test "fails if property is nil", %{account_id: account_id} do
       params = %{
         amount: Decimal.new(10),
@@ -800,6 +793,19 @@ defmodule ExLedger.ExLedgerTest do
       assert %Transaction{
                status: :confirmed,
                properties: %CryptoWithdrawal{confirmations: ^confirmations}
+             } = Repo.get(Transaction, transaction_id)
+    end
+
+    test "confirms the withdrawal transaction and updates it's properties to nil", %{
+      transaction_id: transaction_id
+    } do
+      params = %{transaction_id: transaction_id, properties: nil}
+
+      assert {:ok, %Transaction{id: ^transaction_id}} = ExLedger.confirm_withdrawal(params)
+
+      assert %Transaction{
+               status: :confirmed,
+               properties: nil
              } = Repo.get(Transaction, transaction_id)
     end
 
@@ -914,6 +920,22 @@ defmodule ExLedger.ExLedgerTest do
                Repo.get(Transaction, transaction_id)
     end
 
+    test "updates the transaction's properties to nil", %{transaction_id: transaction_id} do
+      params = %{
+        properties: nil,
+        transaction_id: transaction_id
+      }
+
+      assert {:ok,
+              %Transaction{
+                id: ^transaction_id
+              }} =
+               ExLedger.update_transaction_properties(params)
+
+      assert %Transaction{properties: nil} =
+               Repo.get(Transaction, transaction_id)
+    end
+
     test "fails if the transaction does not exist" do
       params = %{properties: %{confirmations: 5}, transaction_id: 99_999}
 
@@ -924,13 +946,6 @@ defmodule ExLedger.ExLedgerTest do
       params = %{properties: %{confirmations: 5}, transaction_id: nil}
 
       assert {:error, :transaction_not_found} = ExLedger.update_transaction_properties(params)
-    end
-
-    test "fails if properties are nil", %{transaction_id: transaction_id} do
-      params = %{properties: nil, transaction_id: transaction_id}
-
-      assert {:error, changeset} = ExLedger.update_transaction_properties(params)
-      assert "can't be blank" in errors_on(changeset).properties
     end
 
     test "fails if property is nil", %{transaction_id: transaction_id} do

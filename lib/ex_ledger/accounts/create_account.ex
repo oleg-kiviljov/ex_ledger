@@ -9,7 +9,7 @@ defmodule ExLedger.Accounts.CreateAccount do
   @type params :: %{
           required(:currency) => AccountCurrency.t(),
           required(:type) => AccountType.t(),
-          required(:properties) => map()
+          optional(:properties) => map()
         }
 
   @spec execute(params :: CreateAccount.params()) ::

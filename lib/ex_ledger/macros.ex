@@ -1,4 +1,8 @@
 defmodule ExLedger.Macros do
+  @moduledoc """
+  Useful macros.
+  """
+
   defmacro maybe_belongs_to(belongs_to) do
     quote do
       if belongs_to = unquote(belongs_to) do
@@ -6,7 +10,7 @@ defmodule ExLedger.Macros do
         schema = Keyword.fetch!(belongs_to, :schema)
         opts = Keyword.get(belongs_to, :opts, [])
 
-        belongs_to name, schema, opts
+        belongs_to(name, schema, opts)
       end
     end
   end

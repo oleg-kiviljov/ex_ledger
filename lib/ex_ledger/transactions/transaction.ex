@@ -55,7 +55,7 @@ defmodule ExLedger.Transactions.Transaction do
   def create_changeset(transaction, attrs) do
     transaction
     |> cast(attrs, @create_attrs)
-    |> cast_polymorphic_embed(:properties, required: true)
+    |> cast_polymorphic_embed(:properties)
     |> validate_required(@create_attrs)
     |> validate_amount()
     |> foreign_key_constraint(:account_id)
@@ -64,7 +64,7 @@ defmodule ExLedger.Transactions.Transaction do
   def update_changeset(transaction, attrs) do
     transaction
     |> cast(attrs, @update_attrs)
-    |> cast_polymorphic_embed(:properties, required: true)
+    |> cast_polymorphic_embed(:properties)
     |> validate_required(@update_attrs)
   end
 
